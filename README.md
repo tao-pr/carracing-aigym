@@ -18,5 +18,6 @@ A stub notebook and conda env to start using Active Learning in the Car Racing e
 
 # If you are doing this part of a hackathon
 
-* Order pizza and beer/coke
-* Don't shower
+* Please order pizza and beer/coke for the break
+* Please don't shower
+* Please don't straight copy a solution from the internet. But feel free to be inspired
