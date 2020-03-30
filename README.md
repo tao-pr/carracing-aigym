@@ -16,7 +16,7 @@ A stub notebook and conda env to start using Active Learning in the Car Racing e
 * Install box2d, A 2D Physics Engine for Games ```pip install box2d-py```
 * Run ```jupyter notebook``` in this directory and run the notebook and you're done. Modify the notebook to improve the AI
 
-# If you are doing this part of a hackathon
+# If you are doing this as part of a hackathon
 
 * Please order pizza and beer/coke for the break
 * Please don't shower
