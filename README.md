@@ -4,8 +4,8 @@ A stub notebook and conda env to start using Active Learning in the Car Racing e
 
 # Installation using conda and requirements.txt
 
-  ```conda create --name aigym --file requirements.txt```
-  ```jupyter notebook```
+  * ```conda create --name aigym --file requirements.txt```
+  * ```jupyter notebook```
 
 # Manual installation
 
