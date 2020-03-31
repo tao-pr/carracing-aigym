@@ -2,12 +2,28 @@
 
 A stub notebook and conda env to start using Active Learning in the Car Racing environment of AI Gym. HAVE FUN!!!
 
-# Installation using conda and requirements.txt
+# Prepare environment
 
-  * ```conda create --name aigym --file requirements.txt```
-  * ```jupyter notebook```
+A few options are available as follow.
 
-# Manual installation
+## 1. Using conda and requirements.txt
+
+```bash
+  $ conda create --name aigym --file requirements.txt
+  $ conda activate aigym
+  $ jupyter notebook
+```
+
+## 2. Using public miniconda (outside of ING VPN)
+
+```bash
+  $ conda create --file environment_no_vpn.yml
+  $ conda activate gym
+  $ jupyter notebook
+```
+
+
+## 3. Manual installation
 
 * Create a python3 conda env ```conda create --name aigym python``` assuming python3 is the default version
 * Activate the env ```conda activate aigym```

@@ -5,19 +5,17 @@ appnope=0.1.0=py38_0
 attrs=19.3.0=py_0
 backcall=0.1.0=py38_0
 bleach=3.1.0=py_0
-box2d-py=2.3.8=pypi_0
 ca-certificates=2020.1.1=0
 certifi=2019.11.28=py38_1
-cloudpickle=1.3.0=pypi_0
+cloudpickle=1.3.0
 dbus=1.13.12=h90a0687_0
 decorator=4.4.2=py_0
 defusedxml=0.6.0=py_0
 entrypoints=0.3=py38_0
 expat=2.2.6=h0a44026_0
-future=0.18.2=pypi_0
+future=0.18.2
 gettext=0.19.8.1=h15daf44_3
 glib=2.63.1=hd977a24_0
-gym=0.17.1=pypi_0
 icu=58.2=h4b95b61_1
 importlib_metadata=1.5.0=py38_0
 ipykernel=5.1.4=py38h39e3cac_0
@@ -45,7 +43,6 @@ nbconvert=5.6.1=py38_0
 nbformat=5.0.4=py_0
 ncurses=6.2=h0a44026_0
 notebook=6.0.3=py38_0
-numpy=1.18.2=pypi_0
 openssl=1.1.1e=h1de35cc_0
 pandoc=2.2.3.2=0
 pandocfilters=1.4.2=py38_1
@@ -58,7 +55,6 @@ prometheus_client=0.7.1=py_0
 prompt-toolkit=3.0.4=py_0
 prompt_toolkit=3.0.4=0
 ptyprocess=0.6.0=py38_0
-pyglet=1.5.0=pypi_0
 pygments=2.6.1=py_0
 pyqt=5.9.2=py38h655552a_2
 pyrsistent=0.15.7=py38h1de35cc_0
@@ -69,7 +65,7 @@ qt=5.9.7=h468cd18_1
 qtconsole=4.7.2=py_0
 qtpy=1.9.0=py_0
 readline=8.0=h1de35cc_0
-scipy=1.4.1=pypi_0
+scipy=1.4.1
 send2trash=1.5.0=py38_0
 setuptools=46.1.1=py38_0
 sip=4.19.8=py38h0a44026_0
