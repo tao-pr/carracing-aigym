@@ -57,6 +57,18 @@ A few options are available as follow.
   * The reward is the active learning reward (go to the AI gym page about this environment to see how it is calculated)
   * Done is whether the current simulation has ended
   
+# Episodes and stages
+
+* Episode is a simulation which is a sequence of steps which are:
+* A step consists of:
+  * Take action
+  * Observe reward and new state
+  * Learn
+  
+In AI gym an episode ends either when a certain success rule is acheived or something goes completely wrong, otherwise it will keep going
+  
 # The goal
 
-* The goal is to maximise the reward of simulations.
+* The goal is to maximise the cummulative reward of simulations:
+  * Calculate the cumulative reward for the first 2000 steps of each episode and keep the best one and report it at the end
+  * Show us a simulating of your car
