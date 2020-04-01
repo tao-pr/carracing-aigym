@@ -2,6 +2,13 @@
 
 A stub notebook and conda env to start using Active Learning in the Car Racing environment of AI Gym. HAVE FUN!!!
 
+# Active Learning
+
+Active learning is the type of learning where the learner does not have access to training data directly. Instead the agents receives rewards based on actions taken and a current state of the environment:
+1. Actions: is a set of options that the agent could take at every stage
+2. State: is a set of possible configurations of the environment
+3. Rewards: Negative or Positive number indicating if an action resulted in a good/bad outcome based on current state
+
 # Prepare environment
 
 A few options are available as follow.
