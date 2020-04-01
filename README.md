@@ -42,7 +42,7 @@ A few options are available as follow.
 ## 2. Using public miniconda (outside of ING VPN)
 
 ```bash
-  $ conda create --file environment_no_vpn.yml
+  $ conda env create --file environment_no_vpn.yml
   $ conda activate gym
   $ jupyter notebook
 ```
