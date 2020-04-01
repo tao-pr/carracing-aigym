@@ -35,6 +35,7 @@ A few options are available as follow.
   $ conda activate aigym
   $ pip install gym
   $ pip install box2d-py
+  $ pip install matplotlib
   $ jupyter notebook
 ```
 
@@ -55,6 +56,7 @@ A few options are available as follow.
 * Install gym (the reinforcement learning library we are using) ```pip install gym```
 * Install swig (don't ask why) ```conda install swig```
 * Install box2d, A 2D Physics Engine for Games ```pip install box2d-py```
+* Install matplotlib for plotting ```pip install matplotlib```
 * Run ```jupyter notebook``` in this directory and run the notebook and you're done. Modify the notebook to improve the AI
 
 # If you are doing this as part of a hackathon
