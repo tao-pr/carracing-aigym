@@ -9,6 +9,8 @@ Reinforcement learning is the type of learning where the learner does not have a
 2. State: is a set of possible configurations of the environment
 3. Rewards: Negative or Positive number indicating if an action resulted in a good/bad outcome based on current state
 
+<img src="RL.jpg" />
+
 ## Types of RL
 
 * Q-Learning
