@@ -11,6 +11,8 @@ A few options are available as follow.
 ```bash
   $ conda create --name aigym --file requirements.txt
   $ conda activate aigym
+  $ pip install gym
+  $ pip install box2d-py
   $ jupyter notebook
 ```
 
