@@ -65,10 +65,16 @@ A few options are available as follow.
   * Observe reward and new state
   * Learn
   
-In AI gym an episode ends either when a certain success rule is acheived or something goes completely wrong, otherwise it will keep going
+In AI gym an episode ends either when a certain success rule is acheived or something goes completely wrong, otherwise it will keep going. In the car racing example, the simulation ends if you visit all road tiles or you steer out of the map (in which case you get -100 reward additional).
+
+# Reward
+
+* -0.1 for every step/frame
+* 1000 / <number of road tiles> for every visited tile
   
 # The goal
 
 * The goal is to maximise the cummulative reward of simulations:
   * Calculate the cumulative reward for the first 2000 steps of each episode and keep the best one and report it at the end
-  * Show us a simulating of your car
+  * If you finished successfully before 2000 steps, report the best successful finish
+  * Show us a simulation of your method at the end
