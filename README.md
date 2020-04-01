@@ -78,3 +78,4 @@ In AI gym an episode ends either when a certain success rule is acheived or some
   * Calculate the cumulative reward for the first 2000 steps of each episode and keep the best one and report it at the end
   * If you finished successfully before 2000 steps, report the best successful finish
   * Show us a simulation of your method at the end
+* Explain in short what's your method
