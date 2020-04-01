@@ -9,6 +9,12 @@ Reinforcement learning is the type of learning where the learner does not have a
 2. State: is a set of possible configurations of the environment
 3. Rewards: Negative or Positive number indicating if an action resulted in a good/bad outcome based on current state
 
+## Reads:
+
+* https://towardsdatascience.com/simple-reinforcement-learning-q-learning-fcddc4b6fe56
+* https://en.wikipedia.org/wiki/Reinforcement_learning
+
+
 # Prepare environment
 
 A few options are available as follow.
