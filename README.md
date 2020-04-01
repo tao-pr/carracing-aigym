@@ -21,6 +21,8 @@ A few options are available as follow.
 ```bash
   $ conda create --file environment_no_vpn.yml
   $ conda activate gym
+  $ pip install gym
+  $ pip install box2d-py
   $ jupyter notebook
 ```
 
