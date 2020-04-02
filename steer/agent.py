@@ -88,8 +88,9 @@ class TDAgent(Agent):
   Temporal difference
   """
   def __init__(self, learning_rate=0.25, alpha=0.9):
-    self.alpha = alpha
     super().__init__(learning_rate)
+    self.alpha = alpha
+    self.encoder = PixelateStateActionEncoder()
 
   def learn(self, state, action, reward, next_state):
     statehash    = self.encoder.encode_state(state)

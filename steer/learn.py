@@ -11,6 +11,7 @@ if __name__ == '__main__':
   # Create an env, load or create an agent
   env   = gym.make('CarRacing-v0')
   agent = Agent.load(path, TDAgent(learning_rate=0.5, alpha=0.9))
+  print("Agent knows {} policies".format(len(agent.policy)))
 
   # Start!
   print("Starting the learning episodes")
