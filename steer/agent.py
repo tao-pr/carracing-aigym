@@ -61,13 +61,13 @@ class Agent:
     statehash = self.encode_state(state)
     actionhash = self.encode_action(action)
     if statehash not in self.policy:
-      self.policy[statehash] = {action: 0}
+      self.policy[statehash] = {actionhash: 0}
       return 0
-    elif action not in self.policy[statehash]:
-      self.policy[statehash][action] = 0
+    elif actionhash not in self.policy[statehash]:
+      self.policy[statehash][actionhash] = 0
       return 0
     else:
-      return self.policy[state][action]
+      return self.policy[statehash][actionhash]
 
   def save(self, path):
     with open(path, "wb") as f:
@@ -94,15 +94,16 @@ class TDAgent(Agent):
     super().__init__(learning_rate)
 
   def learn(self, state, action, reward, next_state):
-    statehash = self.encode_state(state)
+    statehash    = self.encode_state(state)
     newstatehash = self.encode_state(next_state)
+    actionhash   = self.encode_action(action)
     
     old_v = self.get_v(state, action)
     new_v = self.get_v(next_state, action)
 
     # Update policy (weighted temporal difference)
     diff = self.learning_rate * (reward + self.alpha * new_v - old_v)
-    self.policy[statehash][action] = old_v + diff
+    self.policy[statehash][actionhash] = old_v + diff
 
 
 class QAgent(Agent):

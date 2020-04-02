@@ -25,7 +25,7 @@ if __name__ == '__main__':
       env.render()
 
       # Given the current state, ask the agent to find the best action to take
-      action = agent.best_action(observation)
+      action,_ = agent.best_action(observation)
 
       # If the bot does not know how to react,
       # random from the action space
