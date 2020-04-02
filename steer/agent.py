@@ -2,6 +2,8 @@ import os
 import numpy as np
 import joblib
 
+from .encoder import *
+
 class Agent:
   """
   Base reinforcement learning agent with basic interface
@@ -14,11 +16,7 @@ class Agent:
     self.state_machine = dict() # [state => state' => action]
 
     # Binding state and action encoder (np.array => str)
-    self.encode_state = lambda s: np.array2string(s, precision=0) # Dummy one, should be overridden
-    self.encode_action = lambda s: np.array2string(s)
-
-    # Decode action hash into vector (str => np.array)
-    self.decode_action = lambda s: np.fromstring(s)
+    self.encoder = StateActionEncoder() # TODO Switch to its child class
 
   def reset(self):
     """
@@ -40,7 +38,7 @@ class Agent:
     Return the best action to take on the specified state 
     to maximise the possible reward
     """
-    statehash = self.encode_state(state)
+    statehash = self.encoder.encode_state(state)
     if statehash not in self.state_machine:
       # Unrecognised state, return no recommended action
       return (-1, 0)
@@ -58,8 +56,8 @@ class Agent:
     """
     Evaluate the reward value of `action` taken on the `state`
     """
-    statehash = self.encode_state(state)
-    actionhash = self.encode_action(action)
+    statehash = self.encoder.encode_state(state)
+    actionhash = self.encoder.encode_action(action)
     if statehash not in self.policy:
       self.policy[statehash] = {actionhash: 0}
       return 0
@@ -94,9 +92,9 @@ class TDAgent(Agent):
     super().__init__(learning_rate)
 
   def learn(self, state, action, reward, next_state):
-    statehash    = self.encode_state(state)
-    newstatehash = self.encode_state(next_state)
-    actionhash   = self.encode_action(action)
+    statehash    = self.encoder.encode_state(state)
+    newstatehash = self.encoder.encode_state(next_state)
+    actionhash   = self.encoder.encode_action(action)
     
     old_v = self.get_v(state, action)
     new_v = self.get_v(next_state, action)

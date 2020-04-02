@@ -20,7 +20,8 @@ if __name__ == '__main__':
     print("Episode {} of {} ...".format(i+1, n_episodes))
     
     n = 0
-    while True:
+    done = False
+    while not done:
       n = n+1
       env.render()
 
@@ -34,7 +35,7 @@ if __name__ == '__main__':
         action = env.action_space.sample()
       else:
         print("... Turn #{}, taking action from experience".format(n))
-        action = agent.decode_action(action)
+        action = agent.encoder.decode_action(action)
 
       new_observation, reward, done, info = env.step(action)
 
@@ -42,9 +43,9 @@ if __name__ == '__main__':
       agent.learn(observation, action, reward, new_observation)
 
       if done:
-        print("... DONE!")
+        print("... Episode DONE!")
+        print("... The agent knows {} observations so far".format(len(agent.policy)))
         # TODO reset the agent for the next episode
-        break
 
   # Save the trained agent
-  # agent.save(path)
+  agent.save(path)
