@@ -6,7 +6,7 @@ from .agent import Agent, TDAgent
 if __name__ == '__main__':
 
   # Hardcoded settings
-  n_episodes = 20
+  n_episodes = 100
   path       = "tdagent.bin"
 
   # Create an env, load or create an agent
@@ -47,12 +47,6 @@ if __name__ == '__main__':
     while not done:
       n = n+1
       env.render()
-
-      # Given the current state, ask the agent to find the best action to take
-      # if n>200:
-      #   action,_ = agent.best_action(observation)
-      # else:
-      #   action = None
 
       action,_ = agent.best_action(observation)
 
