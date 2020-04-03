@@ -59,12 +59,15 @@ class Agent:
     statehash = self.encoder.encode_state(state)
     actionhash = self.encoder.encode_action(action)
     if statehash not in self.policy:
+      print("...new state")
       self.policy[statehash] = {actionhash: 0}
       return 0
     elif actionhash not in self.policy[statehash]:
+      print("...known state, new action")
       self.policy[statehash][actionhash] = 0
       return 0
     else:
+      print("...take action from experience")
       return self.policy[statehash][actionhash]
 
   def save(self, path):

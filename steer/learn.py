@@ -47,12 +47,10 @@ if __name__ == '__main__':
       # If the bot does not know how to react,
       # random from the action space
       if action == -1:
-        print("... Turn #{}, learning new action".format(n))
         # action = env.action_space.sample()
         # Take random action, blindly
         action = actions[np.random.choice(len(actions))]
       else:
-        print("... Turn #{}, taking action from experience".format(n))
         action = agent.encoder.decode_action(action)
 
       new_observation, reward, done, info = env.step(action)
