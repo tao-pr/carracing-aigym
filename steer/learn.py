@@ -80,6 +80,8 @@ if __name__ == '__main__':
       # Learn
       agent.learn(observation, action, reward, new_observation)
 
+      observation = new_observation
+
       if done or ((total_reward <= 0 or num_consecutive_reduction > 20) and n > 300):
         print("... Episode DONE!")
         print("... The agent knows {} observations so far".format(len(agent.policy)))
