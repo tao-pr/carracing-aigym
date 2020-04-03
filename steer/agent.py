@@ -90,7 +90,7 @@ class TDAgent(Agent):
   def __init__(self, learning_rate=0.25, alpha=0.9):
     super().__init__(learning_rate)
     self.alpha = alpha
-    self.encoder = PixelateStateActionEncoder()
+    self.encoder = PartialScreenStateActionEncoder()
 
   def learn(self, state, action, reward, next_state):
     statehash    = self.encoder.encode_state(state)

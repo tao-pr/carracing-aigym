@@ -1,3 +1,4 @@
+import numpy as np
 import gym
 
 from .agent import Agent, TDAgent
@@ -12,6 +13,20 @@ if __name__ == '__main__':
   env   = gym.make('CarRacing-v0')
   agent = Agent.load(path, TDAgent(learning_rate=0.5, alpha=0.9))
   print("Agent knows {} policies".format(len(agent.policy)))
+
+  # Preset of actions (stolen from Nawar's ideas)
+  actions = [np.array(v) for v in [
+    [-.90, 0, 0],
+    [-.45, 0, 0],
+    [0, 0, 0],
+    [ .45, 0, 0],
+    [ .90, 0, 0],
+    [-.90, .5, -1],
+    [ .90, .5, -1],
+    [  0,  .5, -1],
+    [ .45, .5, -1],
+    [-.45, .5, -1]
+  ]]
 
   # Start!
   print("Starting the learning episodes")
@@ -33,7 +48,9 @@ if __name__ == '__main__':
       # random from the action space
       if action == -1:
         print("... Turn #{}, learning new action".format(n))
-        action = env.action_space.sample()
+        # action = env.action_space.sample()
+        # Take random action, blindly
+        action = actions[np.random.choice(len(actions))]
       else:
         print("... Turn #{}, taking action from experience".format(n))
         action = agent.encoder.decode_action(action)
@@ -46,6 +63,7 @@ if __name__ == '__main__':
       if done:
         print("... Episode DONE!")
         print("... The agent knows {} observations so far".format(len(agent.policy)))
+        agent.encoder.n = 0
         # TODO reset the agent for the next episode
 
   # Save the trained agent
