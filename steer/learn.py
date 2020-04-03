@@ -12,21 +12,32 @@ if __name__ == '__main__':
 
   # Create an env, load or create an agent
   env   = gym.make('CarRacing-v0')
-  agent = Agent.load(path, TDAgent(encoder=CarRaceEncoder(), learning_rate=0.5, alpha=0.2))
+  agent = Agent.load(path, TDAgent(encoder=CarRaceEncoder(), learning_rate=0.5, alpha=0.8))
   print("Agent knows {} observations".format(len(agent.v)))
 
   # Preset of actions (stolen from Nawar's ideas)
   actions = [np.array(v) for v in [
-    [-.90, 0, 0],
-    [-.45, 0, 0],
-    [0, 0, 0],
-    [ .45, 0, 0],
-    [ .90, 0, 0],
-    [-.90, .5, 0],
-    [ .90, .5, 0],
-    [  0,  .5, 0],
-    [ .45, .5, 0],
-    [-.45, .5, 0]
+    # [steer, gas, brake]
+    [-0.5, 0.1, 0],
+    [ 0.5, 0.1, 0],
+    [-0.2, 0.1, 0],
+    [ 0.2, 0.1, 0],
+    [-0.5, 0.5, 0],
+    [ 0.5, 0.5, 0],
+    [   0, 0.5, 0],
+    [   0, 0.1, 0]
+
+
+    # [-.90, 0, 0],
+    # [-.45, 0, 0],
+    # [0, 0, 0],
+    # [ .45, 0, 0],
+    # [ .90, 0, 0],
+    # [-.90, .5, 0],
+    # [ .90, .5, 0],
+    # [  0,  .5, 0],
+    # [ .45, .5, 0],
+    # [-.45, .5, 0]
   ]]
 
   # Start!
@@ -83,7 +94,7 @@ if __name__ == '__main__':
 
       observation = new_observation
 
-      if done or ((total_reward <= 0 or num_consecutive_reduction > 10) and n > 300):
+      if done or ((total_reward <= 0 or num_consecutive_reduction > 5) and n > 300):
         print("... Episode DONE!")
         print("... The agent knows {} observations so far".format(len(agent.v)))
         agent.encoder.n = 0
