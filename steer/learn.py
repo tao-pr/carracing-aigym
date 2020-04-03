@@ -81,7 +81,7 @@ if __name__ == '__main__':
         print("... The agent knows {} observations so far".format(len(agent.policy)))
         agent.encoder.n = 0
         done = True
-        # TODO reset the agent for the next episode
+        # Save the trained agent
+        agent.save(path)
 
-  # Save the trained agent
-  agent.save(path)
+  

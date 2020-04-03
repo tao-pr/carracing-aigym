@@ -67,9 +67,9 @@ class PartialScreenStateActionEncoder(StateActionEncoder):
         b,g,r = frame[y,x]
         if b+g+r<5:
           num_zeros += 1
-        vector.append(b)
-        vector.append(g)
-        vector.append(r)
+        vector.append(b//64)
+        vector.append(g//64)
+        vector.append(r//64)
         cv2.rectangle(
           box,
           (x,y), 
@@ -80,7 +80,7 @@ class PartialScreenStateActionEncoder(StateActionEncoder):
     vector = np.array(vector)
     filename = "debug/f-{:4}.png".format(self.n) if num_zeros<5 \
       else "debug/f-{:4}-BLACK.png".format(self.n)
-    cv2.imwrite(filename, frame)
+    cv2.imwrite(filename, box)
     self.n = self.n+1
     code = np.array2string(vector, precision=0)
     return code
