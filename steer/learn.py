@@ -2,6 +2,7 @@ import numpy as np
 import gym
 
 from .agent import Agent, TDAgent
+from .encoder import CarRaceEncoder
 
 if __name__ == '__main__':
 
@@ -11,8 +12,8 @@ if __name__ == '__main__':
 
   # Create an env, load or create an agent
   env   = gym.make('CarRacing-v0')
-  agent = Agent.load(path, TDAgent(learning_rate=0.5, alpha=0.2))
-  print("Agent knows {} policies".format(len(agent.policy)))
+  agent = Agent.load(path, TDAgent(encoder=CarRaceEncoder(), learning_rate=0.5, alpha=0.2))
+  print("Agent knows {} observations".format(len(agent.v)))
 
   # Preset of actions (stolen from Nawar's ideas)
   actions = [np.array(v) for v in [
@@ -48,7 +49,6 @@ if __name__ == '__main__':
     while not done:
       n = n+1
       env.render()
-
       action,_ = agent.best_action(observation)
 
       # If the bot does not know how to react,
@@ -61,6 +61,8 @@ if __name__ == '__main__':
         action = env.action_space.sample()
       else:
         action = agent.encoder.decode_action(action)
+
+      print("Action = {}".format(action), type(action)) # TAODEBUG
 
       new_observation, reward, done, info = env.step(action)
       total_reward += reward
@@ -83,7 +85,7 @@ if __name__ == '__main__':
 
       if done or ((total_reward <= 0 or num_consecutive_reduction > 10) and n > 300):
         print("... Episode DONE!")
-        print("... The agent knows {} observations so far".format(len(agent.policy)))
+        print("... The agent knows {} observations so far".format(len(agent.v)))
         agent.encoder.n = 0
         done = True
         # Save the trained agent

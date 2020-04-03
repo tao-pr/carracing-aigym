@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from termcolor import colored
 
 class StateActionEncoder:
   """
@@ -11,10 +12,10 @@ class StateActionEncoder:
     return np.array2string(s, precision=0)
 
   def encode_action(self, s):
-    return np.array2string(s)
+    return np.array2string(s, precision=2, separator=',')
 
   def decode_action(self, s):
-    return np.fromstring(s)
+    return np.fromstring(s.replace("[","").replace("]",""), sep=',')
 
   def encode_color(self, c):
     b,g,r = c
@@ -45,36 +46,37 @@ class PixelateStateActionEncoder(StateActionEncoder):
     return np.array2string(b8x8, precision=0)
 
 
-class PartialScreenStateActionEncoder(StateActionEncoder):
+class CarRaceEncoder(StateActionEncoder):
 
   def __init__(self):
     self.n = 0
 
-  def encode_state(self, s):
-    frame = s[10:80:10, 10:80:10, :]
+  def is_gray(self,b,g,r):
+    return max(b,g,r) - min(b,g,r) <= 30
 
-    # Box encode
-    box = np.zeros_like(frame[:, :, 1])
-    box_size = 1
+  def encode_state(self, s):
+    frame = s[10:90, 0:80, :] # 80x80
+
+    compressed = cv2.resize(frame, (8,8))
+
     vector = []
-    num_zeros = 0
-    for y in np.arange(0, frame.shape[0], box_size):
-      for x in np.arange(0, frame.shape[1], box_size):
-        b,g,r = frame[y,x]
-        if b+g+r<5:
-          num_zeros += 1
-        c = self.encode_color([b,g,r])
-        cv2.rectangle(
-          box,
-          (x,y), 
-          (min(x+box_size, frame.shape[1]), min(y+box_size, frame.shape[0])),
-          c,
-          -1)
+
+    box = np.zeros_like(frame)
+    for j in range(8):
+      for i in range(8):
+        [b,g,r] = [int(k) for k in compressed[j,i]]
+        if self.is_gray(b,g,r):
+          vector.append(1)
+          cv2.rectangle(box, (i*10,j*10), (i*10+10,j*10+10), [160,160,160], -1)
+        else:
+          vector.append(0)
+          cv2.rectangle(box, (i*10,j*10), (i*10+10,j*10+10), [255,255,255], -1)
 
     vector = np.array(vector)
-    filename = "debug/f-{:4}.png".format(self.n)
-    cv2.imwrite(filename, box)
-    self.n = self.n+1
+    if self.n<100:
+      filename = "debug/f-{:4}.png".format(self.n)
+      cv2.imwrite(filename, box)
+      self.n = self.n+1
     code = np.array2string(vector, precision=0)
     return code
     
