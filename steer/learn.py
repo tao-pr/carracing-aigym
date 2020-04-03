@@ -49,10 +49,12 @@ if __name__ == '__main__':
       env.render()
 
       # Given the current state, ask the agent to find the best action to take
-      if n>200:
-        action,_ = agent.best_action(observation)
-      else:
-        action = None
+      # if n>200:
+      #   action,_ = agent.best_action(observation)
+      # else:
+      #   action = None
+
+      action,_ = agent.best_action(observation)
 
       # If the bot does not know how to react,
       # random from the action space
@@ -78,7 +80,7 @@ if __name__ == '__main__':
       # Learn
       agent.learn(observation, action, reward, new_observation)
 
-      if done or ((total_reward <= 0 or num_consecutive_reduction > 10) and n > 300):
+      if done or ((total_reward <= 0 or num_consecutive_reduction > 20) and n > 300):
         print("... Episode DONE!")
         print("... The agent knows {} observations so far".format(len(agent.policy)))
         agent.encoder.n = 0
