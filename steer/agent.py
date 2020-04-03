@@ -40,10 +40,6 @@ class Agent:
     """
     statehash = self.encoder.encode_state(state)
 
-    # # For unhashbale state, just skip
-    # if statehash is None:
-    #   return (-1, 0)
-
     if statehash not in self.state_machine:
       # Unrecognised state, return no recommended action
       return (-1, 0)

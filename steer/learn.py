@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
   # Create an env, load or create an agent
   env   = gym.make('CarRacing-v0')
-  agent = Agent.load(path, TDAgent(learning_rate=0.5, alpha=0.9))
+  agent = Agent.load(path, TDAgent(learning_rate=0.75, alpha=0.9))
   print("Agent knows {} policies".format(len(agent.policy)))
 
   # Preset of actions (stolen from Nawar's ideas)
@@ -21,11 +21,11 @@ if __name__ == '__main__':
     [0, 0, 0],
     [ .45, 0, 0],
     [ .90, 0, 0],
-    [-.90, .5, -1],
-    [ .90, .5, -1],
-    [  0,  .5, -1],
-    [ .45, .5, -1],
-    [-.45, .5, -1]
+    [-.90, .5, 0],
+    [ .90, .5, 0],
+    [  0,  .5, 0],
+    [ .45, .5, 0],
+    [-.45, .5, 0]
   ]]
 
   # Start!
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     done = False
     last_action = -1
     last_state = None
-    
+
     while not done:
       n = n+1
       env.render()
