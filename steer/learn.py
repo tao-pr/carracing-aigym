@@ -6,7 +6,7 @@ from .agent import Agent, TDAgent
 if __name__ == '__main__':
 
   # Hardcoded settings
-  n_episodes = 1
+  n_episodes = 20
   path       = "tdagent.bin"
 
   # Create an env, load or create an agent
@@ -37,6 +37,9 @@ if __name__ == '__main__':
     
     n = 0
     done = False
+    last_action = -1
+    last_state = None
+    
     while not done:
       n = n+1
       env.render()
