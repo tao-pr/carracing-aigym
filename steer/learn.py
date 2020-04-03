@@ -6,12 +6,12 @@ from .agent import Agent, TDAgent
 if __name__ == '__main__':
 
   # Hardcoded settings
-  n_episodes = 100
+  n_episodes = 5000
   path       = "tdagent.bin"
 
   # Create an env, load or create an agent
   env   = gym.make('CarRacing-v0')
-  agent = Agent.load(path, TDAgent(learning_rate=0.75, alpha=0.9))
+  agent = Agent.load(path, TDAgent(learning_rate=0.5, alpha=0.2))
   print("Agent knows {} policies".format(len(agent.policy)))
 
   # Preset of actions (stolen from Nawar's ideas)
@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
       observation = new_observation
 
-      if done or ((total_reward <= 0 or num_consecutive_reduction > 20) and n > 300):
+      if done or ((total_reward <= 0 or num_consecutive_reduction > 10) and n > 300):
         print("... Episode DONE!")
         print("... The agent knows {} observations so far".format(len(agent.policy)))
         agent.encoder.n = 0

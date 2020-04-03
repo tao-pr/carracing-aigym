@@ -12,7 +12,7 @@ class Agent:
     self.learning_rate = learning_rate
 
     # Two-level dictionaries
-    self.policy = dict() # [state => action => reward]
+    self.v = dict() # [state => reward]
     self.state_machine = dict() # [state => state' => action]
 
     # Binding state and action encoder (np.array => str)
@@ -47,29 +47,22 @@ class Agent:
     best_reward = 0
     for next_statehash in self.state_machine[statehash]:
       a = self.state_machine[statehash][next_statehash]
-      v = self.get_v(statehash, a)
+      v = self.get_v(next_statehash)
       if v >= best_reward:
         best_reward = v
         best_action = a
     return (best_action, best_reward)
 
-  def get_v(self, state, action):
+  def get_v(self, state):
     """
-    Evaluate the reward value of `action` taken on the `state`
+    Evaluate the reward value of `state`
     """
     statehash = self.encoder.encode_state(state)
-    actionhash = self.encoder.encode_action(action)
-    if statehash not in self.policy:
-      print("...new state")
-      self.policy[statehash] = {actionhash: 0}
-      return 0
-    elif actionhash not in self.policy[statehash]:
-      print("...known state, new action")
-      self.policy[statehash][actionhash] = 0
+    if statehash not in self.v:
+      self.v[statehash] = 0
       return 0
     else:
-      print("...take action from experience")
-      return self.policy[statehash][actionhash]
+      return self.v[statehash]
 
   def save(self, path):
     with open(path, "wb") as f:
@@ -101,8 +94,8 @@ class TDAgent(Agent):
     newstatehash = self.encoder.encode_state(next_state)
     actionhash   = self.encoder.encode_action(action)
     
-    old_v = self.get_v(state, action)
-    new_v = self.get_v(next_state, action)
+    old_v = self.get_v(state)
+    new_v = self.get_v(next_state)
 
     # Update policy (weighted temporal difference)
     diff = self.learning_rate * (reward + self.alpha * new_v - old_v)

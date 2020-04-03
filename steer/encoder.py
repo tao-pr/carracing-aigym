@@ -51,15 +51,11 @@ class PartialScreenStateActionEncoder(StateActionEncoder):
     self.n = 0
 
   def encode_state(self, s):
-    """
-    Only encode bottom horizontal section and middle lane (line of sight)
-    """
-
-    frame = s[:80, :, :]
+    frame = s[10:80:10, 10:80:10, :]
 
     # Box encode
-    box = np.zeros_like(frame)
-    box_size = 16
+    box = np.zeros_like(frame[:, :, 1])
+    box_size = 1
     vector = []
     num_zeros = 0
     for y in np.arange(0, frame.shape[0], box_size):
@@ -67,19 +63,16 @@ class PartialScreenStateActionEncoder(StateActionEncoder):
         b,g,r = frame[y,x]
         if b+g+r<5:
           num_zeros += 1
-        vector.append(b//64)
-        vector.append(g//64)
-        vector.append(r//64)
+        c = self.encode_color([b,g,r])
         cv2.rectangle(
           box,
           (x,y), 
           (min(x+box_size, frame.shape[1]), min(y+box_size, frame.shape[0])),
-          [int(i) for i in [b,g,r]], 
+          c,
           -1)
 
     vector = np.array(vector)
-    filename = "debug/f-{:4}.png".format(self.n) if num_zeros<5 \
-      else "debug/f-{:4}-BLACK.png".format(self.n)
+    filename = "debug/f-{:4}.png".format(self.n)
     cv2.imwrite(filename, box)
     self.n = self.n+1
     code = np.array2string(vector, precision=0)
