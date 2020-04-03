@@ -37,3 +37,11 @@ class PixelateStateActionEncoder(StateActionEncoder):
         b8x8[y,x] = b8x8[y,x]//32
     return np.array2string(b8x8, precision=0)
 
+
+class PartialScreenStateActionEncoder(StateActionEncoder):
+
+  def encode_state(self, s):
+    """
+    Only encode bottom horizontal section and middle lane (line of sight)
+    """
+    pass
