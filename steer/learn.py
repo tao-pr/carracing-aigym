@@ -30,6 +30,7 @@ if __name__ == '__main__':
 
   # Start!
   print("Starting the learning episodes")
+  best_reward = 0
   for i in range(n_episodes):
     
     observation = env.reset()
@@ -71,6 +72,10 @@ if __name__ == '__main__':
 
       last_reward = reward
 
+      # Record best score
+      if total_reward > best_reward:
+        best_reward = total_reward
+
       # Learn
       agent.learn(observation, action, reward, new_observation)
 
@@ -83,5 +88,7 @@ if __name__ == '__main__':
         done = True
         # Save the trained agent
         agent.save(path)
+
+    print("Best score so far : ", best_reward)
 
   

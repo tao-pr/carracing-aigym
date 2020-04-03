@@ -91,7 +91,7 @@ class TDAgent(Agent):
   """
   Temporal difference
   """
-  def __init__(self, learning_rate=0.25, alpha=0.9):
+  def __init__(self, learning_rate=0.5, alpha=0.7):
     super().__init__(learning_rate)
     self.alpha = alpha
     self.encoder = PartialScreenStateActionEncoder()

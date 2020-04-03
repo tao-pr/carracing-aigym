@@ -59,7 +59,7 @@ class PartialScreenStateActionEncoder(StateActionEncoder):
 
     # Box encode
     box = np.zeros_like(frame)
-    box_size = 8
+    box_size = 16
     vector = []
     num_zeros = 0
     for y in np.arange(0, frame.shape[0], box_size):
