@@ -39,32 +39,50 @@ if __name__ == '__main__':
     done = False
     last_action = -1
     last_state = None
+    total_reward = 0
+
+    last_reward = 0
+    num_consecutive_reduction = 0
 
     while not done:
       n = n+1
       env.render()
 
       # Given the current state, ask the agent to find the best action to take
-      action,_ = agent.best_action(observation)
+      if n>200:
+        action,_ = agent.best_action(observation)
+      else:
+        action = None
 
       # If the bot does not know how to react,
       # random from the action space
       if action == -1:
-        # action = env.action_space.sample()
         # Take random action, blindly
         action = actions[np.random.choice(len(actions))]
+      elif action is None:
+        # Random action too
+        action = env.action_space.sample()
       else:
         action = agent.encoder.decode_action(action)
 
       new_observation, reward, done, info = env.step(action)
+      total_reward += reward
+
+      if reward <= last_reward:
+        num_consecutive_reduction += 1
+      else:
+        num_consecutive_reduction = 0
+
+      last_reward = reward
 
       # Learn
       agent.learn(observation, action, reward, new_observation)
 
-      if done:
+      if done or ((total_reward <= 0 or num_consecutive_reduction > 10) and n > 300):
         print("... Episode DONE!")
         print("... The agent knows {} observations so far".format(len(agent.policy)))
         agent.encoder.n = 0
+        done = True
         # TODO reset the agent for the next episode
 
   # Save the trained agent
