@@ -55,32 +55,29 @@ class PartialScreenStateActionEncoder(StateActionEncoder):
     Only encode bottom horizontal section and middle lane (line of sight)
     """
 
-    frame = cv2.resize(s, (8,8))
-    for y in range(frame.shape[0]):
-      for x in range(frame.shape[1]):
-        frame[y,x] = self.encode_color(frame[y,x])
+    # frame = cv2.resize(s, (16,16))
+    # for y in range(frame.shape[0]):
+    #   for x in range(frame.shape[1]):
+    #     frame[y,x] = self.encode_color(frame[y,x])
+    frame = s[:80, :, :]
 
-    print(frame.shape)
+    # Box encode
+    box = np.zeros_like(frame)
+    box_size = 8
+    for y in np.arange(0, frame.shape[0], box_size):
+      for x in np.arange(0, frame.shape[1], box_size):
+        b,g,r = frame[y,x]
+        cv2.rectangle(
+          box,
+          (x,y), 
+          (min(x+box_size, frame.shape[1]), min(y+box_size, frame.shape[0])),
+          [int(i) for i in [b,g,r]], 
+          -1)
 
-    cv2.imwrite("debug/f-{}.png".format(self.n), frame)
-    v = frame.flatten()
-
-    #cv2.imwrite("debug/bottom.png", bottom)
-    #cv2.imwrite("debug/middle.png", middle)
-
-    # Encode colour
-    # for y in range(bottom.shape[0]):
-    #   for x in range(bottom.shape[1]):
-    #     bottom[y,x] = self.encode_color(bottom[y,x])
-
-    # for y in range(middle.shape[0]):
-    #   for x in range(middle.shape[1]):
-    #     middle[y,x] = self.encode_color(middle[y,x])
-
-    #cv2.imwrite("debug/bottom-ec.png", bottom)
-    #cv2.imwrite("debug/middle-ec.png", middle)
-
+    cv2.imwrite("debug/f-{}.png".format(self.n), box)
+    self.n = self.n+1
+    v = box.flatten()
+    print("...State size : ", v.shape)
     code = np.array2string(v, precision=0)
-    print(code)
     return code
     
