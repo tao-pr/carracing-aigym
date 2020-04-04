@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
   # Create an env, load or create an agent
   env   = gym.make('CarRacing-v0')
-  agent = Agent.load(path, TDAgent(encoder=CarRaceEncoder(), learning_rate=0.5, alpha=0.8))
+  agent = Agent.load(path, TDAgent(encoder=CarRaceEncoder(), learning_rate=0.8, alpha=1.0))
   print("Agent knows {} observations".format(len(agent.v)))
 
   # Preset of actions (stolen from Nawar's ideas)

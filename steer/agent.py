@@ -48,7 +48,7 @@ class Agent:
     best_reward = 0
     for next_statehash in self.state_machine[statehash]:
       a = self.state_machine[statehash][next_statehash]
-      v = self.get_v(next_statehash)
+      v = self.get_v(next_statehash) or 0
       if v >= best_reward:
         best_reward = v
         best_action = a
@@ -61,8 +61,7 @@ class Agent:
     Evaluate the reward value of `state`
     """
     if statehash not in self.v:
-      self.v[statehash] = 0
-      return 0
+      return None
     else:
       return self.v[statehash]
 
@@ -86,7 +85,7 @@ class TDAgent(Agent):
   """
   Temporal difference
   """
-  def __init__(self, encoder=StateActionEncoder(), learning_rate=0.5, alpha=0.7):
+  def __init__(self, encoder=StateActionEncoder(), learning_rate=0.8, alpha=1.0):
     super().__init__(learning_rate)
     self.alpha = alpha
     self.encoder = encoder
@@ -96,8 +95,8 @@ class TDAgent(Agent):
     newstatehash = self.encoder.encode_state(next_state)
     actionhash   = self.encoder.encode_action(action)
     
-    old_v = self.get_v(statehash)
-    new_v = self.get_v(newstatehash)
+    old_v = self.get_v(statehash) or 0
+    new_v = self.get_v(newstatehash) or old_v
 
     # Update state v matrix
     diff = self.learning_rate * (reward + self.alpha * new_v - old_v)
