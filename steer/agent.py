@@ -114,7 +114,7 @@ class Agent:
         return (-1, 0)
       else:
         # Assume the closest state from experience
-        closest = self.kmeans.predict([state])[0]
+        closest = self.kmeans.predict([statevector])[0]
         print(colored("... Assume action from closest state", "blue"))
         return (self.cluster_best_actions[closest], 0)
 
