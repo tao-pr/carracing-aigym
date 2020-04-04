@@ -1,6 +1,9 @@
 import os
 import numpy as np
+import pandas as pd
 import joblib
+from sklearn.cluster import KMeans
+from collections import Counter
 
 from .encoder import *
 
@@ -18,6 +21,59 @@ class Agent:
     # Binding state and action encoder (np.array => str)
     self.encoder = StateActionEncoder() # TODO Switch to its child class
 
+    # Clusters of 
+    self.stateHashToState = dict()
+    self.kmeans = None
+    self.cluster_best_actions = dict()
+
+
+  def revise_clusters(self):
+    """
+    Given the knowledge of the observations so far,
+    re-train the cluster of states and their most likelihood of best action
+    """
+    num_clusters = 8
+    dataset = []
+    best_action = []
+
+    print("Building {} state clusters from {} states".format(
+      num_clusters,
+      len(self.stateHashToState)))
+    for statehash,state in self.stateHashToState.items():
+      dataset.append(state)
+      best_action.append(self.best_action_from_statehash(statehash)[0])
+    
+    dataset = np.array(dataset)
+    print("Dataset dimension : {}".format(dataset.shape))
+
+    # Build KMeans clusters
+    print("Fitting KMeans")
+    self.kmeans = KMeans(n_clusters=num_clusters, max_iter=200, tol=0.0001, copy_x=True, n_jobs=4)
+    self.kmeans.fit(dataset)
+    clusters = self.kmeans.predict(dataset)
+
+    # Collect most selected best actions from each cluster
+    cluster_best_actions = {cid: [] for cid in range(num_clusters)} # [cluster_id => list[actionhash]]
+    for c,a in zip(clusters, best_action):
+      cluster_best_actions[c].append(a)
+
+    def get_best_action(cnt):
+      tops = [i for i,freq in cnt.most_common() if i!=-1]
+      if len(tops)==0:
+        return -1
+      else:
+        return tops[0]
+
+    self.cluster_best_actions = {c: get_best_action(Counter(ws))  \
+      for c,ws in cluster_best_actions.items()}
+
+    pop = Counter(clusters)
+    for c, best_action in self.cluster_best_actions.items():
+      print("... Cluster #{} - {:4.0f} states => Best action : {}".format(
+        c,
+        pop[c],
+        best_action))
+
   def reset(self):
     """
     Reset all internal states
@@ -33,17 +89,7 @@ class Agent:
     """
     pass
 
-  def best_action(self, state):
-    """
-    Return the best action to take on the specified state 
-    to maximise the possible reward
-    """
-    statehash = self.encoder.encode_state(state)
-
-    if statehash not in self.state_machine:
-      # Unrecognised state, return no recommended action
-      print(colored("... Take random action on new state", "cyan"))
-      return (-1, 0)
+  def best_action_from_statehash(self, statehash):
     best_action = -1
     best_reward = 0
     for next_statehash in self.state_machine[statehash]:
@@ -52,11 +98,34 @@ class Agent:
       if v >= best_reward:
         best_reward = v
         best_action = a
+      return best_action, best_reward
+
+  def best_action(self, state, silence=False):
+    """
+    Return the best action to take on the specified state 
+    to maximise the possible reward
+    """
+    statevector,statehash = self.encoder.encode_state(state)
+
+    if statehash not in self.state_machine:
+      if self.kmeans is None:
+        # Unrecognised state, return no recommended action
+        print(colored("... Take random action on new state", "cyan"))
+        return (-1, 0)
+      else:
+        # Assume the closest state from experience
+        closest = self.kmeans.predict([state])[0]
+        print(colored("... Assume action from closest state", "blue"))
+        return (self.cluster_best_actions[closest], 0)
+
+    best_action, best_reward = self.best_action_from_statehash(statehash)
 
     if best_action == -1:
-      print(colored("... Relearn new action from experience", "yellow"))
+      if not silence:
+        print(colored("... Relearn new action from experience", "yellow"))
     else:
-      print(colored("... Take best action from experience", "green"))
+      if not silence:
+        print(colored("... Take best action from experience", "green"))
     return (best_action, best_reward)
 
   def get_v(self, statehash):
@@ -94,9 +163,9 @@ class TDAgent(Agent):
     self.encoder = encoder
 
   def learn(self, state, action, reward, next_state):
-    statehash    = self.encoder.encode_state(state)
-    newstatehash = self.encoder.encode_state(next_state)
-    actionhash   = self.encoder.encode_action(action)
+    statevec,statehash = self.encoder.encode_state(state)
+    _,newstatehash     = self.encoder.encode_state(next_state)
+    actionhash         = self.encoder.encode_action(action)
     
     old_v = self.get_v(statehash) or 0
     new_v = self.get_v(newstatehash) or old_v
@@ -104,6 +173,7 @@ class TDAgent(Agent):
     # Update state v matrix
     diff = self.learning_rate * (reward + self.alpha * new_v - old_v)
     self.v[statehash] = old_v + diff
+    self.stateHashToState[statehash] = statevec
 
     # Update state transition
     if statehash not in self.state_machine:

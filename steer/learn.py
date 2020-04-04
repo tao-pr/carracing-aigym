@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
   # Create an env, load or create an agent
   env   = gym.make('CarRacing-v0')
-  agent = Agent.load(path, TDAgent(encoder=CarRaceEncoder(), learning_rate=0.8, alpha=1.0))
+  agent = Agent.load(path, TDAgent(encoder=CarRaceEncoder(), learning_rate=0.8, alpha=0.9))
   print("Agent knows {} observations".format(len(agent.v)))
 
   # Preset of actions (stolen from Nawar's ideas)
@@ -22,8 +22,8 @@ if __name__ == '__main__':
     [ 0.5, 0.1, 0],
     [-0.2, 0.1, 0],
     [ 0.2, 0.1, 0],
-    [-0.5, 0.5, 0],
-    [ 0.5, 0.5, 0],
+    [-0.2, 0.3, 0],
+    [ 0.2, 0.3, 0],
     [   0, 0.5, 0],
     [   0, 0.1, 0]
 
@@ -97,6 +97,11 @@ if __name__ == '__main__':
         print("... The agent knows {} observations so far".format(len(agent.v)))
         agent.encoder.n = 0
         done = True
+
+        if i%2==0 and i>0:
+          # Rebuild K-Means clusters every N episodes
+          agent.revise_clusters()
+
         # Save the trained agent
         agent.save(path)
 

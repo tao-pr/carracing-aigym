@@ -9,7 +9,7 @@ class StateActionEncoder:
   """
 
   def encode_state(self, s):
-    return np.array2string(s, precision=0)
+    return s, np.array2string(s, precision=0)
 
   def encode_action(self, s):
     return np.array2string(s, precision=2, separator=',')
@@ -25,27 +25,6 @@ class StateActionEncoder:
     else: return 64 # Otherwise
  
 
-class PixelateStateActionEncoder(StateActionEncoder):
-
-  def __init__(self):
-    self.n = 0
-
-  def encode_state(self, s):
-    """
-    Encode 96x96x3 observation into 8x8
-    """
-    b8x8 = cv2.resize(s, (8,8))
-
-    # DEBUG
-    cv2.imwrite("debug/{}.png".format(self.n), b8x8)
-    self.n = (self.n+1)%100
-
-    for y in range(8):
-      for x in range(8):
-        b8x8[y,x] = b8x8[y,x]//32
-    return np.array2string(b8x8, precision=0)
-
-
 class CarRaceEncoder(StateActionEncoder):
 
   def __init__(self):
@@ -57,26 +36,28 @@ class CarRaceEncoder(StateActionEncoder):
   def encode_state(self, s):
     frame = s[10:90, 0:80, :] # 80x80
 
-    compressed = cv2.resize(frame, (8,8))
+    ratio = 5 # Compress ratio
+    tilesize = 80//ratio
+
+    compressed = cv2.resize(frame, (tilesize,tilesize))
 
     vector = []
 
     box = np.zeros_like(frame)
-    for j in range(8):
-      for i in range(8):
+    for j in range(tilesize):
+      for i in range(tilesize):
         [b,g,r] = [int(k) for k in compressed[j,i]]
         if self.is_gray(b,g,r):
           vector.append(1)
-          cv2.rectangle(box, (i*10,j*10), (i*10+10,j*10+10), [160,160,160], -1)
+          cv2.rectangle(box, (i*ratio,j*ratio), (i*ratio+ratio,j*ratio+ratio), [160,160,160], -1)
         else:
           vector.append(0)
-          cv2.rectangle(box, (i*10,j*10), (i*10+10,j*10+10), [255,255,255], -1)
+          cv2.rectangle(box, (i*ratio,j*ratio), (i*ratio+ratio,j*ratio+ratio), [255,255,255], -1)
 
     vector = np.array(vector)
     if self.n<100:
       filename = "debug/f-{:4}.png".format(self.n)
       cv2.imwrite(filename, box)
       self.n = self.n+1
-    code = np.array2string(vector, precision=0)
-    return code
-    
+
+    return vector, np.array2string(vector, precision=0)    
