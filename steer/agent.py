@@ -42,7 +42,7 @@ class Agent:
 
     if statehash not in self.state_machine:
       # Unrecognised state, return no recommended action
-      print(colored("... Take random action on new state", "yellow"))
+      print(colored("... Take random action on new state", "cyan"))
       return (-1, 0)
     best_action = -1
     best_reward = 0
@@ -53,7 +53,10 @@ class Agent:
         best_reward = v
         best_action = a
 
-    print(colored("... Take best action from experience", "green"))
+    if best_action == -1:
+      print(colored("... Relearn new action from experience", "yellow"))
+    else:
+      print(colored("... Take best action from experience", "green"))
     return (best_action, best_reward)
 
   def get_v(self, statehash):
