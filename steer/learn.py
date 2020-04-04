@@ -73,8 +73,6 @@ if __name__ == '__main__':
       else:
         action = agent.encoder.decode_action(action)
 
-      print("Action = {}".format(action), type(action)) # TAODEBUG
-
       new_observation, reward, done, info = env.step(action)
       total_reward += reward
 
